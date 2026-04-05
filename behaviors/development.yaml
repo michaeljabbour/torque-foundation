@@ -12,3 +12,4 @@ config:
   verbose_errors: true
   seed_on_boot: true
   log_level: debug
+  request_logging: true
