@@ -1,0 +1,23 @@
+name: extract-from-monolith
+version: "1.0.0"
+description: "Guided extraction of a domain from a Rails monolith into a Torque bundle"
+
+inputs:
+  - { name: domain, required: true, description: "Domain name to extract" }
+
+steps:
+  - name: analyze-domain
+    prompt: "Analyze the ${domain} domain in the monolith. Identify models, tables, associations, callbacks, and background jobs."
+  - name: map-to-bundle
+    prompt: "Map analysis to Torque bundle architecture. ActiveRecord → data.query(), callbacks → events.publish(), associations → coordinator.call()"
+  - name: design-manifest
+    prompt: "Generate complete manifest.yml for the ${domain} bundle"
+  - name: scaffold
+    action: "torque generate bundle ${domain}"
+  - name: implement
+    prompt: "Translate Rails implementation to Torque bundle code"
+    approval: "Implementation ready for review"
+  - name: validate
+    action: "torque validate"
+  - name: migration-plan
+    prompt: "Create data migration plan: column mappings, data transformations, foreign key resolution"

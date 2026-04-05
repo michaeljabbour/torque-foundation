@@ -1,0 +1,37 @@
+# Standard mount plan — the core deal tracker
+# Identity + pipeline + pulse. Enough for a working deal management app.
+
+app:
+  name: "Torque Standard"
+  description: "Deal tracking with pipeline and activity feed"
+
+bundles:
+  identity:
+    source: "git+https://github.com/torque-framework/torque-bundle-identity.git@main"
+    enabled: true
+    config:
+      jwt_secret: "${AUTH_SECRET}"
+      jwt_ttl_seconds: 3600
+      refresh_ttl_seconds: 86400
+
+  pipeline:
+    source: "git+https://github.com/torque-framework/torque-bundle-pipeline.git@main"
+    enabled: true
+    config:
+      default_stages:
+        - { name: "New lead", position: 1, color: "#6ea8fe" }
+        - { name: "Contacted", position: 2, color: "#b08cff" }
+        - { name: "Submitted", position: 3, color: "#ffb066" }
+        - { name: "Approved", position: 4, color: "#5ee6b8" }
+        - { name: "Funded", position: 5, color: "#50fa7b" }
+
+  pulse:
+    source: "git+https://github.com/torque-framework/torque-bundle-pulse.git@main"
+    enabled: true
+    config:
+      max_entries: 200
+
+  tasks:
+    source: "git+https://github.com/torque-framework/torque-bundle-tasks.git@main"
+    enabled: true
+    config: {}

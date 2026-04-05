@@ -1,0 +1,18 @@
+{
+  "name": "@torquedev/foundation",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/torque-framework/torque-foundation.git"
+  },
+  "main": "index.js",
+  "description": "Composition layer for Torque — bundle inclusion, @mention resolution, content deduplication, lazy activation",
+  "dependencies": {
+    "js-yaml": "^4.1.1"
+  },
+  "scripts": {
+    "test": "echo 'No tests yet'"
+  }
+}

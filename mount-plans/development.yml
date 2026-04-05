@@ -1,0 +1,77 @@
+# Development mount plan — all bundles + dev-friendly settings
+# Use this for local development. Hardcoded secrets, verbose logging, local paths.
+
+app:
+  name: "Torque Dev"
+  description: "Development — local bundle paths, verbose settings"
+
+bundles:
+  identity:
+    source: "path:../../torque-bundle-identity"
+    enabled: true
+    config:
+      jwt_secret: "dev-secret-not-for-production"
+      jwt_ttl_seconds: 86400
+      refresh_ttl_seconds: 604800
+
+  pipeline:
+    source: "path:../../torque-bundle-pipeline"
+    enabled: true
+    config:
+      default_stages:
+        - { name: "New lead", position: 1, color: "#6ea8fe" }
+        - { name: "Contacted", position: 2, color: "#b08cff" }
+        - { name: "Submitted", position: 3, color: "#ffb066" }
+        - { name: "Approved", position: 4, color: "#5ee6b8" }
+        - { name: "Funded", position: 5, color: "#50fa7b" }
+
+  pulse:
+    source: "path:../../torque-bundle-pulse"
+    enabled: true
+    config:
+      max_entries: 500
+
+  tasks:
+    source: "path:../../torque-bundle-tasks"
+    enabled: true
+    config: {}
+
+  workspace:
+    source: "path:../../torque-bundle-workspace"
+    enabled: true
+    config: {}
+
+  boards:
+    source: "path:../../torque-bundle-boards"
+    enabled: true
+    config: {}
+
+  kanban:
+    source: "path:../../torque-bundle-kanban"
+    enabled: true
+    config: {}
+
+  activity:
+    source: "path:../../torque-bundle-activity"
+    enabled: true
+    config: {}
+
+  realtime:
+    source: "path:../../torque-bundle-realtime"
+    enabled: true
+    config: {}
+
+  profile:
+    source: "path:../../torque-bundle-profile"
+    enabled: true
+    config: {}
+
+  admin:
+    source: "path:../../torque-bundle-admin"
+    enabled: true
+    config: {}
+
+  search:
+    source: "path:../../torque-bundle-search"
+    enabled: true
+    config: {}

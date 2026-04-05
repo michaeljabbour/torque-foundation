@@ -1,0 +1,324 @@
+# Bundle Catalog
+# Registry of all known bundles in the Torque ecosystem.
+# This is the authoritative list — check here before building a new bundle.
+#
+# Status values:
+#   released   — production-ready, stable interfaces
+#   preview    — working, interfaces may change
+#   planned    — not yet built, reserved namespace
+#   extracting — being extracted from the monolith
+
+bundles:
+
+  # --- Packages ---
+
+  schema:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-schema.git@main"
+    description: "Type validators and contract checking for Torque. Zero dependencies."
+    tables: []
+    publishes: []
+    interfaces: []
+    depends_on: []
+    extraction_difficulty: easy
+    notes: "Not a bundle -- a shared package used by the kernel for type-checked contract validation."
+
+  # ─── Released ──────────────────────────────────────────
+
+  identity:
+    version: "1.0.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-identity.git@main"
+    description: "Authentication, JWT sessions, user management"
+    tables: [users, refresh_tokens, revoked_tokens]
+    publishes:
+      - identity.user.authenticated
+      - identity.session.created
+      - identity.auth.failed
+      - identity.session.revoked
+    interfaces:
+      - getUser
+      - validateToken
+      - revokeUserSessions
+    depends_on: []
+    extraction_difficulty: easy
+    monolith_origin: "myrm-api: app/interactors/authenticate_*, app/models/user.rb (auth subset)"
+
+  pipeline:
+    version: "1.0.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-pipeline.git@main"
+    description: "Stage-based workflow engine — deals, stages, kanban"
+    tables: [stages, deals]
+    publishes:
+      - pipeline.deal.created
+      - pipeline.deal.stage_changed
+      - pipeline.deal.archived
+    interfaces:
+      - getDeal
+      - getStage
+      - listDealsByStage
+    depends_on: []
+    optional_deps: [identity]
+    extraction_difficulty: moderate
+    monolith_origin: "myrm-api: app/models/business_product.rb, app/models/stage.rb"
+
+  pulse:
+    version: "1.0.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-pulse.git@main"
+    description: "Activity timeline — subscribes to events, writes human-readable feed"
+    tables: [activities]
+    publishes: []
+    interfaces:
+      - recentActivity
+    depends_on: []
+    optional_deps: [identity, pipeline]
+    extraction_difficulty: easy
+    monolith_origin: "new — did not exist in monolith"
+
+  tasks:
+    version: "1.0.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-tasks.git@main"
+    description: "Task management — create, assign, and track tasks linked to deals or entities"
+    tables: [tasks]
+    publishes:
+      - tasks.task.created
+      - tasks.task.completed
+    interfaces:
+      - getTask
+      - listTasksForEntity
+    depends_on: []
+    optional_deps: [identity, pipeline]
+    extraction_difficulty: easy
+    monolith_origin: "new — did not exist in monolith"
+
+  workspace:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-workspace.git@main"
+    description: "Workspace management — organizations, members, and invites"
+    tables: [workspaces, workspace_memberships, workspace_invites]
+    publishes:
+      - workspace.workspace.created
+      - workspace.member.invited
+    interfaces:
+      - getWorkspace
+      - listUserWorkspaces
+      - isMember
+    depends_on: []
+    extraction_difficulty: easy
+
+  boards:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-boards.git@main"
+    description: "Board management — boards within workspaces and board memberships"
+    tables: [boards, board_memberships]
+    publishes:
+      - boards.board.created
+      - boards.board.updated
+      - boards.member.added
+    interfaces:
+      - listByWorkspace
+      - getBoard
+      - authorizeBoardAccess
+      - listBoardMembers
+    depends_on: [workspace]
+    extraction_difficulty: easy
+
+  kanban:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-kanban.git@main"
+    description: "Kanban board engine — lists, cards, labels, checklists, and checkitems"
+    tables: [lists, cards, card_members, labels, card_labels, checklists, checkitems]
+    publishes:
+      - kanban.list.created
+      - kanban.list.reordered
+      - kanban.card.created
+      - kanban.card.updated
+      - kanban.card.moved
+      - kanban.label.created
+      - kanban.checkitem.toggled
+    interfaces:
+      - getCard
+      - getBoardSnapshot
+    depends_on: [boards]
+    optional_deps: [identity]
+    extraction_difficulty: moderate
+
+  activity:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-activity.git@main"
+    description: "Activity feed, comments, and notifications"
+    tables: [actions, notifications, watchers]
+    publishes: []
+    interfaces:
+      - getCardActions
+      - getBoardActions
+    depends_on: [kanban, boards]
+    optional_deps: [workspace]
+    extraction_difficulty: easy
+
+  realtime:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-realtime.git@main"
+    description: "Real-time WebSocket broadcast for board events"
+    tables: []
+    publishes: []
+    interfaces: []
+    depends_on: [kanban, boards]
+    optional_deps: [activity]
+    extraction_difficulty: easy
+
+  profile:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-profile.git@main"
+    description: "User profiles, avatars, and preferences"
+    tables: [profiles, search_history]
+    publishes:
+      - profile.profile.updated
+    interfaces:
+      - getProfile
+      - getUserPreferences
+    depends_on: []
+    extraction_difficulty: easy
+
+  admin:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-admin.git@main"
+    description: "Roles, permissions, and administration panel"
+    tables: [roles, user_roles]
+    publishes:
+      - admin.role.assigned
+      - admin.role.revoked
+    interfaces:
+      - hasRole
+      - getUserRoles
+      - hasPermission
+    depends_on: []
+    optional_deps: [identity, workspace, boards, kanban]
+    extraction_difficulty: easy
+
+  search:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-search.git@main"
+    description: "Full-text search with auto-indexing and typeahead"
+    tables: [search_entries]
+    publishes: []
+    interfaces:
+      - search
+      - suggest
+    depends_on: []
+    optional_deps: [kanban, boards, workspace]
+    extraction_difficulty: easy
+
+  # ─── Planned (reserved namespaces for MyRM migration) ──
+
+  entity-graph:
+    status: planned
+    description: "Core entity management — companies, contacts, locations, custom fields"
+    tables: [entities, contacts, locations, fields, field_values, relationships]
+    publishes:
+      - entity.created
+      - entity.updated
+      - entity.archived
+      - entity.relationship.created
+    interfaces:
+      - getEntity
+      - searchEntities
+      - getContact
+    depends_on: []
+    optional_deps: [identity]
+    extraction_difficulty: hard
+    monolith_origin: "myrm-api: app/models/business.rb, contact.rb, business_location.rb + ~50 tables"
+    notes: "The gravity well. Most other bundles reference entities. Extract carefully."
+
+  accounting:
+    status: planned
+    description: "Financial tracking — funding reports, payments, splits, draw requests"
+    tables: [funding_reports, payment_items, payment_transactions, split_items, draw_requests, fees]
+    publishes:
+      - accounting.report.submitted
+      - accounting.report.retracted
+      - accounting.payment.created
+      - accounting.payment.processed
+      - accounting.split.calculated
+    interfaces:
+      - getReport
+      - getPaymentStatus
+    depends_on: [entity-graph, pipeline]
+    extraction_difficulty: moderate
+    monolith_origin: "myrm-api: app/models/funding_details_report.rb, payment_item.rb, split_report_item.rb"
+
+  communications:
+    status: planned
+    description: "Multi-channel messaging — SMS, voice, email campaigns"
+    tables: [messages, threads, campaigns, campaign_batches, templates, service_phones]
+    publishes:
+      - communications.message.sent
+      - communications.message.received
+      - communications.call.completed
+      - communications.campaign.started
+    interfaces:
+      - sendMessage
+      - getThread
+    depends_on: [identity]
+    optional_deps: [entity-graph, pipeline]
+    extraction_difficulty: moderate
+    monolith_origin: "myrm-api: app/services/dialer_service/, text_messages_service/, app/models/text_message.rb, dialer_call.rb"
+
+  intelligence:
+    status: planned
+    description: "AI capabilities — chat completions, entity extraction, column matching"
+    tables: [chats, messages, prompts]
+    publishes:
+      - intelligence.chat.created
+      - intelligence.completion.finished
+    interfaces:
+      - createCompletion
+      - getChat
+    depends_on: [identity]
+    extraction_difficulty: easy
+    monolith_origin: "myrm-api: app/services/ai/, app/models/ai_chat.rb, ai_message.rb"
+
+  analytics:
+    status: planned
+    description: "Metrics, leaderboards, conversion tracking"
+    tables: [metrics, leaderboard_entries]
+    publishes:
+      - analytics.metric.recorded
+    interfaces:
+      - getMetrics
+      - getLeaderboard
+    depends_on: []
+    optional_deps: [pipeline, entity-graph, communications]
+    extraction_difficulty: moderate
+    monolith_origin: "myrm-api: app/models/analytics/, app/graphql/resolvers/analytics/"
+    notes: "Currently tightly coupled to CRM models via analytics trackers. Must convert to event subscriptions."
+
+  integrations:
+    status: planned
+    description: "External API connections — document signing, offers, compliance"
+    tables: [connections, sync_jobs, webhooks]
+    publishes:
+      - integrations.document.signed
+      - integrations.offer.received
+      - integrations.offer.status_changed
+      - integrations.sync.completed
+    interfaces:
+      - submitDocument
+      - requestOffer
+    depends_on: [identity]
+    optional_deps: [entity-graph, pipeline]
+    extraction_difficulty: easy
+    monolith_origin: "myrm-api: app/services/pandadoc/, offers_api_service/, dnc_external_service/"
+

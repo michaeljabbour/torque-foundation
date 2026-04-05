@@ -1,0 +1,15 @@
+# Minimal mount plan — authentication only
+# Use this as a starting point for apps that need auth but no domain features.
+
+app:
+  name: "Torque Minimal"
+  description: "Identity only — auth with no business features"
+
+bundles:
+  identity:
+    source: "git+https://github.com/torque-framework/torque-bundle-identity.git@main"
+    enabled: true
+    config:
+      jwt_secret: "${AUTH_SECRET}"
+      jwt_ttl_seconds: 3600
+      refresh_ttl_seconds: 86400

@@ -1,0 +1,18 @@
+name: validate-all
+version: "1.0.0"
+description: "Comprehensive validation of the entire ecosystem"
+
+inputs:
+  - { name: test_command, description: "Command used to run tests (e.g. 'npm test', 'pytest', 'cargo test')", default: "npm test" }
+
+steps:
+  - name: composability-check
+    action: "torque validate"
+  - name: run-tests
+    action: "{{ inputs.test_command }}"
+  - name: check-manifests
+    prompt: "Verify all bundle manifest.yml files have complete interface contracts, event schemas, and API endpoints"
+  - name: check-agent-guides
+    prompt: "Verify all bundles have agent.md with YAML frontmatter"
+  - name: summary
+    prompt: "Summarize all validation results and recommend fixes"

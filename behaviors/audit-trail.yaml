@@ -1,0 +1,19 @@
+name: audit-trail
+version: "1.0.0"
+description: "Captures all published events into an audit log. Apply to any mount plan that needs compliance tracking."
+
+events:
+  subscribes:
+    - { event: "pipeline.deal.created" }
+    - { event: "pipeline.deal.stage_changed" }
+    - { event: "pipeline.deal.archived" }
+    - { event: "identity.user.authenticated" }
+    - { event: "identity.session.created" }
+
+context:
+  include:
+    - context/EVENT_PATTERNS.md
+
+config:
+  retention_days: 90
+  log_format: jsonl

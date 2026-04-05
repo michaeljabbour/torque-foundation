@@ -1,0 +1,123 @@
+# Full mount plan — all bundles enabled
+# This is the target state after complete migration from the monolith.
+# Bundles marked with source comments are not yet extracted.
+
+app:
+  name: "Torque Full"
+  description: "Complete platform — all bundles active"
+
+bundles:
+  identity:
+    source: "git+https://github.com/torque-framework/torque-bundle-identity.git@main"
+    enabled: true
+    config:
+      jwt_secret: "${AUTH_SECRET}"
+      jwt_ttl_seconds: 3600
+      refresh_ttl_seconds: 86400
+
+  pipeline:
+    source: "git+https://github.com/torque-framework/torque-bundle-pipeline.git@main"
+    enabled: true
+    config:
+      default_stages:
+        - { name: "New lead", position: 1, color: "#6ea8fe" }
+        - { name: "Contacted", position: 2, color: "#b08cff" }
+        - { name: "Submitted", position: 3, color: "#ffb066" }
+        - { name: "Approved", position: 4, color: "#5ee6b8" }
+        - { name: "Funded", position: 5, color: "#50fa7b" }
+
+  pulse:
+    source: "git+https://github.com/torque-framework/torque-bundle-pulse.git@main"
+    enabled: true
+    config:
+      max_entries: 500
+
+  tasks:
+    source: "git+https://github.com/torque-framework/torque-bundle-tasks.git@main"
+    enabled: true
+    config: {}
+
+  workspace:
+    source: "git+https://github.com/torque-framework/torque-bundle-workspace.git@main"
+    enabled: true
+    config: {}
+
+  boards:
+    source: "git+https://github.com/torque-framework/torque-bundle-boards.git@main"
+    enabled: true
+    config: {}
+
+  kanban:
+    source: "git+https://github.com/torque-framework/torque-bundle-kanban.git@main"
+    enabled: true
+    config: {}
+
+  activity:
+    source: "git+https://github.com/torque-framework/torque-bundle-activity.git@main"
+    enabled: true
+    config: {}
+
+  realtime:
+    source: "git+https://github.com/torque-framework/torque-bundle-realtime.git@main"
+    enabled: true
+    config: {}
+
+  profile:
+    source: "git+https://github.com/torque-framework/torque-bundle-profile.git@main"
+    enabled: true
+    config: {}
+
+  admin:
+    source: "git+https://github.com/torque-framework/torque-bundle-admin.git@main"
+    enabled: true
+    config: {}
+
+  search:
+    source: "git+https://github.com/torque-framework/torque-bundle-search.git@main"
+    enabled: true
+    config: {}
+
+  # ─── Not yet extracted ─────────────────────────────────
+  # Uncomment as bundles are built and pushed.
+
+  # entity-graph:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-entity-graph.git@main"
+  #   enabled: true
+  #   config:
+  #     max_custom_fields: 50
+
+  # accounting:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-accounting.git@main"
+  #   enabled: true
+  #   config:
+  #     currency: usd
+  #     payment_processing_due_days: 30
+
+  # communications:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-communications.git@main"
+  #   enabled: true
+  #   config:
+  #     twilio_account_sid: "${TWILIO_ACCOUNT_SID}"
+  #     twilio_auth_token: "${TWILIO_AUTH_TOKEN}"
+  #     channels: [sms, voice]
+
+  # intelligence:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-intelligence.git@main"
+  #   enabled: true
+  #   config:
+  #     provider: openai
+  #     api_key: "${OPENAI_API_KEY}"
+  #     model: gpt-4o
+
+  # analytics:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-analytics.git@main"
+  #   enabled: true
+  #   config:
+  #     retention_days: 90
+
+  # integrations:
+  #   source: "git+https://github.com/torque-framework/torque-bundle-integrations.git@main"
+  #   enabled: true
+  #   config:
+  #     pandadoc_api_key: "${PANDADOC_API_KEY}"
+

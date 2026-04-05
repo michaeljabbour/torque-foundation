@@ -1,0 +1,14 @@
+name: development
+version: "1.0.0"
+description: "Development-mode behavior. Loads all architecture context for AI-assisted development."
+
+context:
+  include:
+    - context/DESIGN_PRINCIPLES.md
+    - context/DOMAIN_CONVENTIONS.md
+    - context/EVENT_PATTERNS.md
+
+config:
+  verbose_errors: true
+  seed_on_boot: true
+  log_level: debug

@@ -1,0 +1,25 @@
+name: onboard-bundle
+version: "1.0.0"
+description: "End-to-end workflow for creating a new bundle from requirements to validated implementation"
+
+inputs:
+  - { name: bundle_name, required: true, description: "Name of the bundle to create" }
+
+steps:
+  - name: scaffold
+    action: "torque generate bundle ${bundle_name}"
+  - name: design-manifest
+    prompt: "Design a complete manifest.yml for ${bundle_name} with schema, interfaces, events, API routes, and behavioral specs"
+  - name: generate-skeleton
+    action: "torque generate from-manifest bundles/${bundle_name}/manifest.yml"
+  - name: implement-logic
+    prompt: "Implement business logic in bundles/${bundle_name}/logic.js following cross-bundle-calls and error-handling patterns"
+  - name: write-seeds
+    prompt: "Create realistic seed data in bundles/${bundle_name}/seeds.js"
+  - name: generate-tests
+    action: "torque generate tests bundles/${bundle_name}/manifest.yml"
+  - name: validate
+    action: "torque validate"
+  - name: review
+    prompt: "Review ${bundle_name} bundle for contract compliance and composability"
+    approval: "Bundle ready for review"

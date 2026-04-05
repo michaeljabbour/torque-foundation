@@ -1,0 +1,15 @@
+name: ai-assisted
+version: "1.0.0"
+description: "Loads all AI-native context for agent-assisted development. Apply when AI agents will be working with this codebase."
+
+context:
+  include:
+    - context/DESIGN_PRINCIPLES.md
+    - context/DOMAIN_CONVENTIONS.md
+    - context/EVENT_PATTERNS.md
+    - context/MIGRATION_GUIDE.md
+
+agents:
+  include:
+    - agents/bundle-architect.md
+    - agents/code-reviewer.md
