@@ -1,0 +1,22 @@
+name: security-hardened
+version: "1.0.0"
+description: "Enforces CSRF protection and rate limiting on all routes, with audit logging for interface calls and route completions."
+
+gates:
+  - position: route:before
+    handler: "@torquedev/ext-security/handlers/csrf-enforcement.js"
+  - position: route:before
+    handler: "@torquedev/ext-security/handlers/rate-limiter.js"
+
+hooks:
+  - position: interface:after-call
+    handler: "@torquedev/ext-security/handlers/audit-log.js"
+  - position: route:after
+    handler: "@torquedev/ext-security/handlers/audit-log.js"
+
+config:
+  rate_limit:
+    window_ms: 60000
+    max_requests: 100
+  csrf: true
+  audit_log: true
