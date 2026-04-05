@@ -1,0 +1,15 @@
+name: observability
+version: "1.0.0"
+description: "Wires OpenTelemetry-style structured logging to core HookBus positions for interface calls and HTTP route completion."
+
+hooks:
+  - position: interface:before-call
+    handler: "@torquedev/ext-otel/hooks/before-call.js"
+  - position: interface:after-call
+    handler: "@torquedev/ext-otel/hooks/after-call.js"
+  - position: route:after
+    handler: "@torquedev/ext-otel/hooks/route-after.js"
+
+config:
+  structured_logging: true
+  trace_propagation: true
