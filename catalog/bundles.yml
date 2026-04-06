@@ -164,17 +164,47 @@ bundles:
     optional_deps: [workspace]
     extraction_difficulty: easy
 
-  realtime:
+  iam:
+    version: "1.0.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-iam.git@main"
+    description: "Consolidated identity, admin, profiles, and teams — JWT auth, RBAC, session management"
+    tables: [users, refresh_tokens, revoked_tokens, roles, user_roles, profiles, search_history, teams, team_members]
+    publishes:
+      - identity.user.authenticated
+      - identity.session.created
+      - identity.auth.failed
+      - identity.session.revoked
+      - admin.role.assigned
+      - admin.role.revoked
+      - profile.profile.updated
+      - iam.team.created
+      - iam.team.updated
+      - iam.team.deleted
+      - iam.team.member_added
+      - iam.team.member_removed
+    interfaces:
+      - getUser
+      - validateToken
+      - revokeUserSessions
+      - hasRole
+      - getUserRoles
+      - hasPermission
+      - getProfile
+      - getUserPreferences
+    depends_on: []
+    notes: "Supersedes identity + admin + profile as a single consolidated bundle."
+
+  graphql:
     version: "0.1.0"
     status: released
-    source: "git+https://github.com/torque-framework/torque-bundle-realtime.git@main"
-    description: "Real-time WebSocket broadcast for board events"
+    source: "git+https://github.com/torque-framework/torque-bundle-graphql.git@main"
+    description: "Auto-generated GraphQL schema from all bundle manifests"
     tables: []
     publishes: []
     interfaces: []
-    depends_on: [kanban, boards]
-    optional_deps: [activity]
-    extraction_difficulty: easy
+    depends_on: []
+    notes: "Introspects the registry to build a GraphQL schema from all mounted bundles."
 
   profile:
     version: "0.1.0"
@@ -220,6 +250,90 @@ bundles:
     depends_on: []
     optional_deps: [kanban, boards, workspace]
     extraction_difficulty: easy
+
+  # ─── App Bundles (composed bundles with UI + seeds) ─────
+
+  kanban-app:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-kanban-app.git@main"
+    description: "Full kanban application — workspace list, board views, card detail, dashboard"
+    tables: []
+    publishes: []
+    interfaces:
+      - listUserWorkspaces
+    depends_on: [workspace, boards, kanban, activity, search]
+    optional_deps: [iam]
+
+  activity-app:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-activity-app.git@main"
+    description: "Activity feed UI — comments, notifications, watchers"
+    tables: []
+    publishes: []
+    interfaces: []
+    depends_on: [activity, kanban, boards]
+
+  search-app:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-bundle-search-app.git@main"
+    description: "Search UI — global search across all indexed bundles"
+    tables: []
+    publishes: []
+    interfaces: []
+    depends_on: [search]
+
+  # ─── Extensions (cross-cutting, not bundles) ───────────
+
+  ext-authorization:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-authorization.git@main"
+    description: "HookBus-based RBAC and record-level access control from manifest declarations"
+
+  ext-soft-delete:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-soft-delete.git@main"
+    description: "Soft-delete extension for datalayer with discarded_at convention"
+
+  ext-async-events:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-async-events.git@main"
+    description: "Async job queue for EventBus with subscribeAsync() and retry logic"
+
+  ext-search:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-search.git@main"
+    description: "Full-text search service backed by SQLite FTS5"
+
+  ext-storage:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-storage.git@main"
+    description: "File storage service with bundle-scoped namespaces and local filesystem adapter"
+
+  ext-embeddings:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-embeddings.git@main"
+    description: "Vector embedding indexing and semantic search"
+
+  ext-otel:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-otel.git@main"
+    description: "OpenTelemetry observability — spans, structured logging, request tracing"
+
+  ext-security:
+    version: "0.1.0"
+    status: released
+    source: "git+https://github.com/torque-framework/torque-ext-security.git@main"
+    description: "Security hardening — RBAC gates, rate limiting, CSRF, audit logging"
 
   # ─── Planned (reserved namespaces for MyRM migration) ──
 
